@@ -18,15 +18,9 @@ client {
 }
 
 advertise {
-<<<<<<< HEAD
-  http = "10.130.0.14"
-  rpc  = "10.130.0.14"
-  serf = "10.130.0.14"
-=======
   http = "10.130.0.3"
   rpc  = "10.130.0.14"
   serf = "10.130.0.7"
->>>>>>> 4c1dcfcec23f281deb8cc7cf11f6dbf72dad2ffc
 }
 
 consul {
