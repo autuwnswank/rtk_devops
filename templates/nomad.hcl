@@ -18,11 +18,19 @@ client {
 }
 
 advertise {
-  http = "10.0.2.15"
-  rpc  = "10.0.2.15"
-  serf = "10.0.2.15"
+  http = "10.130.0.14"
+  rpc  = "10.130.0.14"
+  serf = "10.130.0.14"
 }
 
 consul {
   address = "127.0.0.1:8500"
 }
+
+vault {
+  enabled = true
+  address = "http://10.130.0.13:8200" 
+  #token goes here
+}
+
+
