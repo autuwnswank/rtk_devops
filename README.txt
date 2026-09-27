@@ -6,3 +6,5 @@ sudo tee /etc/docker/daemon.json <<EOF
 EOF
 sudo systemctl restart docker
 consul intention create frontend-nginx vault-nginx
+User -> HTTPS -> frontend Nginx -> proxy_pass -> localhost:8080 (sidecar frontend)
+    -> mTLS -> sidecar backend -> backend Nginx -> "Derived straight from Vault"
