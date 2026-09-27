@@ -1,0 +1,15 @@
+[Unit]
+Description="HashiCorp Vault - A tool for managing secrets"
+Documentation=https://vaultproject.io
+After=network-online.target consul.service
+Wants=network-online.target consul.service
+
+[Service]
+ExecStart=/usr/local/bin/vault server -config=/etc/vault.d/vault.hcl
+Restart=on-failure
+RestartSec=5s
+User=root
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

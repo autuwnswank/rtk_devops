@@ -1,4 +1,3 @@
-###DEPRECATED
 job "nginx-vault-demo" {
   datacenters = ["dc1"]
   type        = "service"
@@ -7,6 +6,7 @@ job "nginx-vault-demo" {
     count = 1
 
     network {
+      mode = "bridge"          # Service Mesh
       port "http" {
         to = 80
       }
@@ -15,7 +15,12 @@ job "nginx-vault-demo" {
     service {
       name = "vault-nginx"
       port = "http"
+      address_mode = "alloc"
+      connect {
+        sidecar_service {}     # Nomad поднимет Envoy рядом с Nginx
+      }
     }
+
     task "nginx" {
       driver = "docker"
 

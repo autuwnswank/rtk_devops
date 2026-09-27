@@ -8,11 +8,11 @@ sudo mkdir -p /etc/consul.d/; sudo cp ./templates/consul.hcl /etc/consul.d/consu
 sudo cp ./templates/nomad.service /etc/systemd/system/nomad.service;
 sudo cp ./templates/consul.service /etc/systemd/system/consul.service;
 #установка nomad
-unzip nomad_1.11.3_linux_amd64.zip;
+unzip nomad_1.11.3_linux_amd64.zip; rm LICENSE.txt;
 sudo mv nomad /usr/local/bin/;
 sudo chmod +x /usr/local/bin/nomad;
 #установка nomad
-unzip consul_1.22.7_linux_amd64.zip;
+unzip consul_1.22.7_linux_amd64.zip; rm LICENSE.txt;
 sudo mv consul /usr/local/bin/;
 sudo chmod +x /usr/local/bin/consul;
 sudo systemctl enable nomad.service;

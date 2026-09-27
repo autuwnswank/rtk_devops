@@ -1,26 +1,38 @@
-###DEPRECATED
-job "nginx-vault-demo" {
+job "nginx-frontend-demo" {
   datacenters = ["dc1"]
   type        = "service"
 
-  group "nginx-group" {
+  group "frontend-group" {
     count = 1
 
     network {
+      mode = "bridge"
       port "http" {
         to = 80
       }
     }
 
     service {
-      name = "vault-nginx"
+      name = "frontend-nginx"
       port = "http"
+      address_mode = "alloc"
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "vault-nginx"  # ← Имя ПЕРВОГО сервиса
+              local_bind_port  = 8080            # ← Порт для локального доступа
+            }
+          }
+        }
+      }
     }
+
     task "nginx" {
       driver = "docker"
 
       vault {
-        role = "nginx-backend"
+        role = "nginx-frontend"
       }
 
       identity {
@@ -31,7 +43,7 @@ job "nginx-vault-demo" {
 
       template {
         data = <<EOF
-{{ with secret "kv/data/data/nginx-configs/backend1" }}
+{{ with secret "kv/data/data/nginx-configs/backend2" }}
 {{ .Data.data.config_file }}
 {{ end }}
 EOF
