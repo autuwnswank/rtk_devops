@@ -4,6 +4,7 @@
 3. В Vault поднять два KV-хранилища для конфигов веб-сервисов
 4. Взаимодействие должно быть организовано по паттерну Sidecar
 5. В Vault настроить выпуск сертификатов (HTTPS)
+
 ## 1. Установка кластера
 Версии компонент: nomad 1.11.3, consul 1.22.7, vault 1.21.4.
 
@@ -208,6 +209,8 @@ vault-nginx.default.dc1.internal.28d0b6e4-b1c4-dd24-05a2-c648347e99b2.consul::10
 boxey@nomad-compute-3:~/rtk_devops$ nomad alloc exec -task nginx 98ac4dff curl -s http://127.0.0.1:8080
 Derived straight from Vault
 ```
+## 5 Сертификаты
+Реализовано автоматическое обновление сертификатов (сhanged_mode restart). Результат: https://81.26.176.66:21145/
 
 
 
