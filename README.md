@@ -90,6 +90,15 @@ consul-node-1  10.130.0.3:8301   alive   server  1.22.7  2         dc1  default 
 consul-node-2  10.130.0.14:8301  alive   server  1.22.7  2         dc1  default    <all>
 consul-node-3  10.130.0.13:8301  alive   server  1.22.7  2         dc1  default    <all>
 ```
+Кроме того, для mTLS необходимо сделать ключ шифрования (gossip):
+```
+nomad operator gossip keyring generate
+```
+После чего записать в глобальные переменные на каждом узле nomad в файл nomad.hcl
+Проверка, что шифрование поддерживается, можно вот так:
+```
+nomad operator gossip keyring list
+```
 ## 2 Установка Vault
 Основные скрипты - install_vault.sh, vault_jwt_setup.sh, env.sh.
 Скрипт install_vault.sh проводить на 1 ВМ (в моем случае это Leader-node, 10.130.0.13).
