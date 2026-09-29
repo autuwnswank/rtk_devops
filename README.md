@@ -219,8 +219,7 @@ vault-nginx.default.dc1.internal.28d0b6e4-b1c4-dd24-05a2-c648347e99b2.consul::10
 boxey@nomad-compute-3:~/rtk_devops$ nomad alloc exec -task nginx 98ac4dff curl -s http://127.0.0.1:8080
 Derived straight from Vault
 ```
-## 5 Сертификаты
-Реализовано автоматическое обновление сертификатов (сhanged_mode restart). Результат: https://81.26.176.66:21145/
+
 
 
 
