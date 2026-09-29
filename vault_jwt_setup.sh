@@ -1,5 +1,5 @@
 export VAULT_ADDR="http://127.0.0.1:8200";
-export VAULT_TOKEN="..."; #рут токен
+export VAULT_TOKEN=""; #рут токен
 
 vault auth disable jwt
 
@@ -23,7 +23,7 @@ vault write auth/jwt/role/nginx-backend \
   bound_audiences="vault.io" \
   user_claim="/nomad_job_id" \
   user_claim_json_pointer=true \
-  token_policies="nginx-policy, vault-cert-policy" \
+  token_policies="nginx-policy,vault-cert-policy" \
   token_period="30m"
 
 vault write auth/jwt/role/nginx-frontend \
@@ -31,7 +31,7 @@ vault write auth/jwt/role/nginx-frontend \
   bound_audiences="vault.io" \
   user_claim="/nomad_job_id" \
   user_claim_json_pointer=true \
-  token_policies="nginx-policy, vault-cert-policy" \
+  token_policies="nginx-policy,vault-cert-policy" \
   token_period="30m"
 
 vault write pki_int/root/generate/internal \
@@ -41,6 +41,7 @@ vault write pki_int/root/generate/internal \
 vault write pki_int/roles/nomad-role \
   allowed_domains="global.nomad" \
   allow_subdomains=true \
-  max_ttl="72h"
+  max_ttl="72h" \
+  generate_lease=true
 
 

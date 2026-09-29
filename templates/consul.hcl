@@ -23,7 +23,7 @@ retry_join = ["10.130.0.3", "10.130.0.14", "10.130.0.13"]
 ui_config {
   enabled = true
 }
-
+# Envoy
 ports {
   grpc = 8502
 }

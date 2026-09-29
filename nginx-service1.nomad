@@ -39,9 +39,10 @@ job "nginx-vault-demo" {
 
       template {
         data = <<EOF
-{{- with pkiCert "pki_int/issue/nomad-role" "common_name=backend.global.nomad" "ttl=24h" "private_key_format=pkcs8" -}}
-{{ .Cert }}
-{{ .Key }}
+{{ with secret "pki_int/issue/nomad-role" "common_name=backend.global.nomad" "ttl=2m" "private_key_format=pkcs8" }}
+{{ .Data.certificate }}
+{{ .Data.private_key }}
+{{ .Data.issuing_ca }}
 {{ end }}
 EOF
         destination = "local/bundle.pem"
@@ -58,7 +59,8 @@ EOF
       }
 
       config {
-        image = "nginx:alpine"
+        image = "wsandwitch/nginx:latest"
+        force_pull = true
         ports = ["http"]
         volumes = [
           "local/nginx.conf:/etc/nginx/nginx.conf",
