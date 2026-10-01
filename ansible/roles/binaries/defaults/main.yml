@@ -1,0 +1,8 @@
+hashicorp_download_base: "https://hashicorp-releases.yandexcloud.net"
+hashicorp_bin_dir: "/usr/local/bin"
+
+nomad_version: "1.11.3"
+consul_version: "1.22.7"
+
+nomad_arch: "linux_amd64"
+consul_arch: "linux_amd64"

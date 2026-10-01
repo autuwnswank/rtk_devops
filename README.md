@@ -4,7 +4,8 @@
 3. В Vault поднять два KV-хранилища для конфигов веб-сервисов
 4. Взаимодействие должно быть организовано по паттерну Sidecar
 5. В Vault настроить выпуск сертификатов (HTTPS)
-6. Поднять кластер RabbitMQ
+6. Бонус: Поднять кластер RabbitMQ
+7. Ansible
 
 ## 1. Установка кластера
 Версии компонент: nomad 1.11.3, consul 1.22.7, vault 1.21.4.
@@ -223,15 +224,41 @@ vault-nginx.default.dc1.internal.28d0b6e4-b1c4-dd24-05a2-c648347e99b2.consul::10
 boxey@nomad-compute-3:~/rtk_devops$ nomad alloc exec -task nginx 98ac4dff curl -s http://127.0.0.1:8080
 Derived straight from Vault
 ```
-## RabbitMQ
+## 5. Сертификаты
+На данный момент реализовано только через параметр перезагрузки nginx.
+
+nginx-service1.nomad как пример:
+
+```
+      template {
+        data = <<EOF
+{{- with pkiCert "pki_int/issue/nomad-role" "common_name=backend.global.nomad" "ttl=24h" "private_key_format=pkcs8" -}}
+{{ .Cert }}
+{{ .Key }}
+{{ end }}
+EOF
+        destination = "local/bundle.pem"
+        change_mode = "restart"
+      }
+
+```
+
+Более эффективные варианты:
+
+1. njs - исполнение JS-кода, который без перезагрузки конфига подтянет сертификаты, есть в ветке test пример, необходим дебаг.
+
+2. Архитектурный вариант: Blue/Green Deployment - поднимаем 4 сервиса nginx, пока обновляем серты у первых двух (перезагружаем), ребалансировать трафик на вторые 2
+
+
+## 6. RabbitMQ
+
+Бонусное задание
 
 sudo rabbitmq-plugins --offline enable rabbitmq_peer_discovery_consul
 
 После установки необходим тест на отказоустойчивость. Здесь важно разделить, на что будут тесты:
 
-1. Проверка сохранности метаданных: Хватит обыкновенного перезапуска узла и проверки кворума
-2. Проверка сохранности самих данных: Необходима публикация persistent-сообщения, после чего стоп-рестарт и проверка кворума
-
-sudo rabbitmqadmin get queue=rtk-queue count=3 ackmode=ack_requeue_true
+1. Проверка сохранности метаданных: Хватит обыкновенного перезапуска узла и проверки кворума (что кластер собрался, проверяется через ```nomad alloc exec -task rabbitmq <alloc_id> rabbitmqctl cluster_status```)
+2. Проверка сохранности самих данных: Необходима публикация persistent-сообщения, после чего стоп-рестарт и проверка кворума (```sudo rabbitmqadmin get queue=rtk-queue count=3 ackmode=ack_requeue_true```)
 
 Регистрация сервиса в Consul: consul catalog nodes -service=rabbitmq

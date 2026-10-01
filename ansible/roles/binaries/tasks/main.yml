@@ -1,0 +1,37 @@
+- name: Ensure unzip is installed
+  ansible.builtin.apt:
+    name: unzip
+    state: present
+    update_cache: true
+  when: ansible_os_family == "Debian"
+
+- name: Ensure unzip is installed (RHEL family)
+  ansible.builtin.yum:
+    name: unzip
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Download and install Nomad
+  ansible.builtin.unarchive:
+    src: "{{ hashicorp_download_base }}/nomad/{{ nomad_version }}/nomad_{{ nomad_version }}_{{ nomad_arch }}.zip"
+    dest: "{{ hashicorp_bin_dir }}"
+    remote_src: true
+    mode: "0755"
+    owner: root
+    group: root
+    creates: "{{ hashicorp_bin_dir }}/nomad"
+
+- name: Download and install Consul
+  ansible.builtin.unarchive:
+    src: "{{ hashicorp_download_base }}/consul/{{ consul_version }}/consul_{{ consul_version }}_{{ consul_arch }}.zip"
+    dest: "{{ hashicorp_bin_dir }}"
+    remote_src: true
+    mode: "0755"
+    owner: root
+    group: root
+    creates: "{{ hashicorp_bin_dir }}/consul"
+
+- name: Remove LICENSE.txt files left by unarchive
+  ansible.builtin.file:
+    path: "{{ hashicorp_bin_dir }}/LICENSE.txt"
+    state: absent
