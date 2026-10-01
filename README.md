@@ -71,9 +71,6 @@ $ sudo systemctl restart docker
    ```
 Остальные Конфиги изменению не подлежат
 ### 1.3 Установка кластеров Nomad и Consul
-### 1.3 Установка кластеров Nomad и Consul
-### 1.3 Установка кластеров Nomad и Consul
-### 1.3 Установка кластеров Nomad и Consul
 Основной скрипт - install.sh. Для удаления - uninstall.sh
 Запуск:
 ```
