@@ -1,5 +1,5 @@
 export VAULT_ADDR="http://127.0.0.1:8200";
-export VAULT_TOKEN="..."; #рут токен
+export VAULT_TOKEN="..."; #ваш токен
 
 vault auth disable jwt
 
@@ -32,6 +32,14 @@ vault write auth/jwt/role/nginx-frontend \
   user_claim="/nomad_job_id" \
   user_claim_json_pointer=true \
   token_policies="nginx-policy, vault-cert-policy" \
+  token_period="30m"
+
+vault write auth/jwt/role/rabbitmq \
+  role_type="jwt" \
+  bound_audiences="vault.io" \
+  user_claim="/nomad_job_id" \
+  user_claim_json_pointer=true \
+  token_policies="rabbitmq-policy" \
   token_period="30m"
 
 vault write pki_int/root/generate/internal \

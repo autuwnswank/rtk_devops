@@ -1,0 +1,9 @@
+- name: Install and configure Consul + Nomad cluster
+  hosts: all
+  become: true
+  gather_facts: true
+
+  roles:
+    - role: hashicorp_binaries
+    - role: consul
+    - role: nomad

@@ -4,6 +4,7 @@
 3. В Vault поднять два KV-хранилища для конфигов веб-сервисов
 4. Взаимодействие должно быть организовано по паттерну Sidecar
 5. В Vault настроить выпуск сертификатов (HTTPS)
+6. Поднять кластер RabbitMQ
 
 ## 1. Установка кластера
 Версии компонент: nomad 1.11.3, consul 1.22.7, vault 1.21.4.
@@ -68,6 +69,9 @@ $ sudo systemctl restart docker
    }
    ```
 Остальные Конфиги изменению не подлежат
+### 1.3 Установка кластеров Nomad и Consul
+### 1.3 Установка кластеров Nomad и Consul
+### 1.3 Установка кластеров Nomad и Consul
 ### 1.3 Установка кластеров Nomad и Consul
 Основной скрипт - install.sh. Для удаления - uninstall.sh
 Запуск:
@@ -219,7 +223,15 @@ vault-nginx.default.dc1.internal.28d0b6e4-b1c4-dd24-05a2-c648347e99b2.consul::10
 boxey@nomad-compute-3:~/rtk_devops$ nomad alloc exec -task nginx 98ac4dff curl -s http://127.0.0.1:8080
 Derived straight from Vault
 ```
+## RabbitMQ
 
+sudo rabbitmq-plugins --offline enable rabbitmq_peer_discovery_consul
 
+После установки необходим тест на отказоустойчивость. Здесь важно разделить, на что будут тесты:
 
+1. Проверка сохранности метаданных: Хватит обыкновенного перезапуска узла и проверки кворума
+2. Проверка сохранности самих данных: Необходима публикация persistent-сообщения, после чего стоп-рестарт и проверка кворума
 
+sudo rabbitmqadmin get queue=rtk-queue count=3 ackmode=ack_requeue_true
+
+Регистрация сервиса в Consul: consul catalog nodes -service=rabbitmq
